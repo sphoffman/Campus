@@ -1,0 +1,12 @@
+# Containerlab runtime/generated files
+clab-*/
+*.annotations.json
+*.nexus.csv
+
+# LabHost packet captures
+pcaps/*
+!pcaps/.gitkeep
+
+# Editor and OS files
+.DS_Store
+*.swp

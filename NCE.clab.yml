@@ -1,0 +1,179 @@
+name: NCE
+
+topology:
+  nodes:
+    ABR-1:
+      kind: juniper_vjunosrouter
+      image: vrnetlab/juniper_vjunos-router:26.2R1.7
+      startup-config: configs/junos/ABR-1/startup-config.cfg
+    ABR-2:
+      kind: juniper_vjunosrouter
+      image: vrnetlab/juniper_vjunos-router:26.2R1.7
+      startup-config: configs/junos/ABR-2/startup-config.cfg
+    DC-1:
+      kind: juniper_vjunosrouter
+      image: vrnetlab/juniper_vjunos-router:26.2R1.7
+      startup-config: configs/junos/DC-1/startup-config.cfg
+    DC-2:
+      kind: juniper_vjunosrouter
+      image: vrnetlab/juniper_vjunos-router:26.2R1.7
+      startup-config: configs/junos/DC-2/startup-config.cfg
+    BD-1:
+      kind: juniper_vjunosevolved
+      image: vrnetlab/juniper_vjunosevolved:26.2R1.7-EVO
+      startup-config: configs/junos/BD-1/startup-config.cfg
+    BD-2:
+      kind: juniper_vjunosevolved
+      image: vrnetlab/juniper_vjunosevolved:26.2R1.7-EVO
+      startup-config: configs/junos/BD-2/startup-config.cfg
+    vQFX1:
+      kind: juniper_vjunosswitch
+      image: vrnetlab/juniper_vjunos-switch:26.2R1.7
+      startup-config: configs/junos/vQFX1/startup-config.cfg
+    vQFX2:
+      kind: juniper_vjunosswitch
+      image: vrnetlab/juniper_vjunos-switch:26.2R1.7
+      startup-config: configs/junos/vQFX2/startup-config.cfg
+    vQFX3:
+      kind: juniper_vjunosswitch
+      image: vrnetlab/juniper_vjunos-switch:26.2R1.7
+      startup-config: configs/junos/vQFX3/startup-config.cfg
+    host1:
+      kind: linux
+      image: ghcr.io/sphoffman/labhost:1.4
+      binds:
+        - ./configs:/config
+        - ./pcaps:/pcaps
+      cap-add:
+        - NET_ADMIN
+        - NET_RAW
+      sysctls:
+        net.ipv4.tcp_l3mdev_accept: "1"
+    host2:
+      kind: linux
+      image: ghcr.io/sphoffman/labhost:1.4
+      binds:
+        - ./configs:/config
+        - ./pcaps:/pcaps
+      cap-add:
+        - NET_ADMIN
+        - NET_RAW
+      sysctls:
+        net.ipv4.tcp_l3mdev_accept: "1"
+    host3:
+      kind: linux
+      image: ghcr.io/sphoffman/labhost:1.4
+      binds:
+        - ./configs:/config
+        - ./pcaps:/pcaps
+      cap-add:
+        - NET_ADMIN
+        - NET_RAW
+      sysctls:
+        net.ipv4.tcp_l3mdev_accept: "1"
+    DC-Host:
+      kind: linux
+      image: ghcr.io/sphoffman/labhost:1.4
+      binds:
+        - ./configs:/config
+        - ./pcaps:/pcaps
+      cap-add:
+        - NET_ADMIN
+        - NET_RAW
+      sysctls:
+        net.ipv4.tcp_l3mdev_accept: "1"
+    ABR-Host:
+      kind: linux
+      image: ghcr.io/sphoffman/labhost:1.4
+      binds:
+        - ./configs:/config
+        - ./pcaps:/pcaps
+      cap-add:
+        - NET_ADMIN
+        - NET_RAW
+      sysctls:
+        net.ipv4.tcp_l3mdev_accept: "1"
+    DC-vQFX:
+      kind: juniper_vjunosswitch
+      image: vrnetlab/juniper_vjunos-switch:26.2R1.7
+      startup-config: configs/junos/DC-vQFX/startup-config.cfg
+    ABR-QFX:
+      kind: juniper_vjunosswitch
+      image: vrnetlab/juniper_vjunos-switch:26.2R1.7
+      startup-config: configs/junos/ABR-QFX/startup-config.cfg
+
+    vMX1:
+      kind: juniper_vjunosrouter
+      image: vrnetlab/juniper_vjunos-router:26.2R1.7
+      startup-config: configs/junos/vMX1/startup-config.cfg
+    Remote-Host:
+      kind: linux
+      image: ghcr.io/sphoffman/labhost:1.4
+      binds:
+        - ./configs:/config
+        - ./pcaps:/pcaps
+      cap-add:
+        - NET_ADMIN
+        - NET_RAW
+      sysctls:
+        net.ipv4.tcp_l3mdev_accept: "1"
+    host4:
+      kind: linux
+      image: ghcr.io/sphoffman/labhost:1.4
+      binds:
+        - ./configs:/config
+        - ./pcaps:/pcaps
+      cap-add:
+        - NET_ADMIN
+        - NET_RAW
+      sysctls:
+        net.ipv4.tcp_l3mdev_accept: "1"
+  links:
+    - endpoints: [ "ABR-1:ge-0/0/0", "ABR-2:ge-0/0/0" ]
+    - endpoints: [ "DC-1:ge-0/0/0", "DC-2:ge-0/0/0" ]
+    - endpoints: [ "DC-1:ge-0/0/1", "ABR-1:ge-0/0/1" ]
+    - endpoints: [ "DC-2:ge-0/0/2", "ABR-2:ge-0/0/2" ]
+    - endpoints: [ "BD-1:et-0/0/0", "ABR-1:ge-0/0/3" ]
+    - endpoints: [ "BD-2:et-0/0/1", "ABR-2:ge-0/0/4" ]
+    - endpoints: [ "BD-1:et-0/0/2", "DC-1:ge-0/0/3" ]
+    - endpoints: [ "BD-2:et-0/0/2", "DC-2:ge-0/0/3" ]
+    - endpoints: [ "vQFX1:ge-0/0/0", "BD-1:et-0/0/3" ]
+    - endpoints: [ "vQFX1:ge-0/0/1", "BD-2:et-0/0/3" ]
+    - endpoints: [ "vQFX2:ge-0/0/0", "BD-1:et-0/0/4" ]
+    - endpoints: [ "vQFX2:ge-0/0/1", "BD-2:et-0/0/4" ]
+    - endpoints: [ "vQFX3:ge-0/0/0", "BD-1:et-0/0/5" ]
+    - endpoints: [ "vQFX3:ge-0/0/1", "BD-2:et-0/0/5" ]
+    - endpoints: [ "host1:eth1", "vQFX1:ge-0/0/2" ]
+    - endpoints: [ "host2:eth1", "vQFX2:ge-0/0/2" ]
+    - endpoints: [ "host3:eth1", "vQFX3:ge-0/0/2" ]
+    - endpoints: [ "DC-vQFX:ge-0/0/0", "DC-2:ge-0/0/4" ]
+    - endpoints: [ "DC-vQFX:ge-0/0/1", "DC-1:ge-0/0/4" ]
+    - endpoints: [ "DC-Host:eth1", "DC-vQFX:ge-0/0/2" ]
+    - endpoints: [ "ABR-QFX:ge-0/0/0", "ABR-1:ge-0/0/5" ]
+    - endpoints: [ "ABR-QFX:ge-0/0/1", "ABR-2:ge-0/0/5" ]
+    - endpoints: [ "ABR-Host:eth1", "ABR-QFX:ge-0/0/2" ]
+    - endpoints: [ "vMX1:ge-0/0/0", "ABR-1:ge-0/0/6" ]
+    - endpoints: [ "Remote-Host:eth1", "vMX1:ge-0/0/1" ]
+    - endpoints: [ "BD-1:et-0/0/6", "BD-2:et-0/0/6" ]
+    - endpoints: [ "host1:eth2", "vQFX1:ge-0/0/3" ]
+    - endpoints: [ "host1:eth3", "vQFX1:ge-0/0/4" ]
+    - endpoints: [ "host1:eth4", "vQFX1:ge-0/0/5" ]
+    - endpoints: [ "host1:eth5", "vQFX1:ge-0/0/6" ]
+    - endpoints: [ "host1:eth6", "vQFX1:ge-0/0/7" ]
+    - endpoints: [ "host1:eth7", "vQFX1:ge-0/0/8" ]
+    - endpoints: [ "host1:eth8", "vQFX1:ge-0/0/9" ]
+    - endpoints: [ "host2:eth2", "vQFX2:ge-0/0/3" ]
+    - endpoints: [ "host2:eth3", "vQFX2:ge-0/0/4" ]
+    - endpoints: [ "host2:eth4", "vQFX2:ge-0/0/5" ]
+    - endpoints: [ "host2:eth5", "vQFX2:ge-0/0/6" ]
+    - endpoints: [ "host2:eth6", "vQFX2:ge-0/0/7" ]
+    - endpoints: [ "host2:eth7", "vQFX2:ge-0/0/8" ]
+    - endpoints: [ "host2:eth8", "vQFX2:ge-0/0/9" ]
+    - endpoints: [ "host3:eth2", "vQFX3:ge-0/0/3" ]
+    - endpoints: [ "host3:eth3", "vQFX3:ge-0/0/4" ]
+    - endpoints: [ "host3:eth4", "vQFX3:ge-0/0/5" ]
+    - endpoints: [ "host3:eth5", "vQFX3:ge-0/0/6" ]
+    - endpoints: [ "host3:eth6", "vQFX3:ge-0/0/7" ]
+    - endpoints: [ "host3:eth7", "vQFX3:ge-0/0/8" ]
+    - endpoints: [ "host3:eth8", "vQFX3:ge-0/0/9" ]
+    - endpoints: [ "host4:eth1", "BD-1:et-0/0/1" ]
